@@ -39,4 +39,12 @@ public class SimpleCalculatorTest {
         assertEquals(5, result);
     }
 
+    @Test
+    @DisplayName("33 % 6 = 3")
+    public void testReminder() {
+        SimpleCalculator simpleCalculator = new SimpleCalculator();
+        int result = simpleCalculator.reminder(33,6);
+        assertEquals(3, result);
+    }
+
 }
