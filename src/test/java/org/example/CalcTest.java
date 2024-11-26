@@ -15,10 +15,10 @@ public class CalcTest {
         assertThat(rs).isEqualTo(8);
     }
     @Test
-    @DisplayName("3 + 5")
+    @DisplayName("10 + 5")
     public void t2() {
-        int rs = Calc.run("3+5");
-        assertThat(rs).isEqualTo(8);
+        int rs = Calc.run("10 + 5");
+        assertThat(rs).isEqualTo(15);
     }
 
 }
