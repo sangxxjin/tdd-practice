@@ -3,9 +3,14 @@ package org.example;
 public class Calc {
 
     public static int run(String expr) {
-        String[] exprBits = expr.split(" \\+ ");
-        int num1 = Integer.parseInt(exprBits[0]);
-        int num2 = Integer.parseInt(exprBits[1]);
-        return num1 + num2;
+        return typeCalc(expr);
+    }
+
+    private static int typeCalc(String expr) {
+        if (expr.contains(" + ")) {
+            String[] split = expr.split(" \\+ ");
+            return Integer.parseInt(split[0]) + Integer.parseInt(split[1]);
+        }
+        return 0;
     }
 }
