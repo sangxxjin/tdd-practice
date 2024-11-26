@@ -15,4 +15,12 @@ public class SimpleCalculatorTest {
         assertEquals(3, result);
     }
 
+    @Test
+    @DisplayName("7 * 3 = 21")
+    public void testMultiply() {
+        SimpleCalculator simpleCalculator = new SimpleCalculator();
+        int result = SimpleCalculator.multiply(7,3);
+        assertEquals(21, result);
+    }
+
 }
