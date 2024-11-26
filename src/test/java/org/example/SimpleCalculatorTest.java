@@ -19,7 +19,7 @@ public class SimpleCalculatorTest {
     @DisplayName("7 * 3 = 21")
     public void testMultiply() {
         SimpleCalculator simpleCalculator = new SimpleCalculator();
-        int result = SimpleCalculator.multiply(7,3);
+        int result = simpleCalculator.multiply(7,3);
         assertEquals(21, result);
     }
 
@@ -35,7 +35,7 @@ public class SimpleCalculatorTest {
     @DisplayName("33 / 6 = 5")
     public void testDivide() {
         SimpleCalculator simpleCalculator = new SimpleCalculator();
-        int result = simpleCalculator.divide(10,6);
+        int result = simpleCalculator.divide(33,6);
         assertEquals(5, result);
     }
 
