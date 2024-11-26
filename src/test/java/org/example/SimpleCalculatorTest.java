@@ -31,4 +31,12 @@ public class SimpleCalculatorTest {
         assertEquals(4, result);
     }
 
+    @Test
+    @DisplayName("33 / 6 = 5")
+    public void testDivide() {
+        SimpleCalculator simpleCalculator = new SimpleCalculator();
+        int result = simpleCalculator.divide(10,6);
+        assertEquals(5, result);
+    }
+
 }
