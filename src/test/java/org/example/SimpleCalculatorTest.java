@@ -23,4 +23,12 @@ public class SimpleCalculatorTest {
         assertEquals(21, result);
     }
 
+    @Test
+    @DisplayName("10 - 6 = 4")
+    public void testMinus() {
+        SimpleCalculator simpleCalculator = new SimpleCalculator();
+        int result = simpleCalculator.minus(10,6);
+        assertEquals(4, result);
+    }
+
 }
