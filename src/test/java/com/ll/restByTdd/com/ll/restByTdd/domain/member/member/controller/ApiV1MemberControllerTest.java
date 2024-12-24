@@ -87,7 +87,7 @@ public class ApiV1MemberControllerTest {
         resultActions
                 .andExpect(handler().handlerType(ApiV1MemberController.class))
                 .andExpect(handler().methodName("login"))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("유저1님 환영합니다."))
                 .andExpect(jsonPath("$.data").exists())
@@ -95,7 +95,7 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.data.item.id").isNumber())
                 .andExpect(jsonPath("$.data.item.createDate").isString())
                 .andExpect(jsonPath("$.data.item.modifyDate").isString())
-                .andExpect(jsonPath("$.data.item.nickname").value("무명"))
+                .andExpect(jsonPath("$.data.item.nickname").value("유저1"))
                 .andExpect(jsonPath("$.data.apiKey").isString());
     }
 }
