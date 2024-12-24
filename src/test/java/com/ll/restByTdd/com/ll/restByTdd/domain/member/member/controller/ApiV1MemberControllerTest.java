@@ -57,7 +57,7 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("201-1"))
                 .andExpect(jsonPath("$.msg").value("무명님 환영합니다. 회원가입이 완료되었습니다."));
 
-        Member member =memberService.findByUsername("usernew").get();
+        Member member = memberService.findByUsername("usernew").get();
         assertThat(member.getNickname()).isEqualTo("무명");
     }
 }
