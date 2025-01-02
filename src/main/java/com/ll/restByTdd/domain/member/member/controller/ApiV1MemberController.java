@@ -4,8 +4,10 @@ import com.ll.restByTdd.domain.member.member.dto.MemberDto;
 import com.ll.restByTdd.domain.member.member.entity.Member;
 import com.ll.restByTdd.domain.member.member.service.MemberService;
 import com.ll.restByTdd.global.exceptions.ServiceException;
+import com.ll.restByTdd.global.rq.Rq;
 import com.ll.restByTdd.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ApiV1MemberController {
     private final MemberService memberService;
+    private final Rq rq;
 
     record MemberJoinReqBody(
             String username,
@@ -69,5 +72,10 @@ public class ApiV1MemberController {
                         member.getApiKey()
                 )
         );
+    }
+    @GetMapping("/me")
+    public MemberDto me() {
+        Member member = rq.checkAuthentication();
+        return new MemberDto(member);
     }
 }
