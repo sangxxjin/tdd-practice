@@ -35,67 +35,94 @@ public class ApiV1MemberControllerTest {
     @DisplayName("회원가입")
     void t1() throws Exception {
         ResultActions resultActions = mvc
-                .perform(
-                        post("/api/v1/members/join")
-                                .content("""
+            .perform(
+                post("/api/v1/members/join")
+                    .content("""
                                         {
                                             "username": "usernew",
                                             "password": "1234",
                                             "nickname": "무명"
                                         }
                                         """.stripIndent())
-                                .contentType(
-                                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
-                                )
-                )
-                .andDo(print());
+                    .contentType(
+                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
+                    )
+            )
+            .andDo(print());
 
         resultActions
-                .andExpect(handler().handlerType(ApiV1MemberController.class))
-                .andExpect(handler().methodName("join"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.resultCode").value("201-1"))
-                .andExpect(jsonPath("$.msg").value("무명님 환영합니다. 회원가입이 완료되었습니다."))
-                .andExpect(jsonPath("$.data").exists())
-                .andExpect(jsonPath("$.data.id").isNumber())
-                .andExpect(jsonPath("$.data.createDate").isString())
-                .andExpect(jsonPath("$.data.modifyDate").isString())
-                .andExpect(jsonPath("$.data.nickname").value("무명"));
+            .andExpect(handler().handlerType(ApiV1MemberController.class))
+            .andExpect(handler().methodName("join"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.resultCode").value("201-1"))
+            .andExpect(jsonPath("$.msg").value("무명님 환영합니다. 회원가입이 완료되었습니다."))
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.data.id").isNumber())
+            .andExpect(jsonPath("$.data.createDate").isString())
+            .andExpect(jsonPath("$.data.modifyDate").isString())
+            .andExpect(jsonPath("$.data.nickname").value("무명"));
 
         Member member = memberService.findByUsername("usernew").get();
         assertThat(member.getNickname()).isEqualTo("무명");
     }
 
     @Test
-    @DisplayName("로그인")
+    @DisplayName("회원가입 시 이미 사용중인 username, 409")
     void t2() throws Exception {
         ResultActions resultActions = mvc
-                .perform(
-                        post("/api/v1/members/login")
-                                .content("""
+            .perform(
+                post("/api/v1/members/join")
+                    .content("""
+                                        {
+                                            "username": "user1",
+                                            "password": "1234",
+                                            "nickname": "무명"
+                                        }
+                                        """.stripIndent())
+                    .contentType(
+                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
+                    )
+            )
+            .andDo(print());
+
+        resultActions
+            .andExpect(handler().handlerType(ApiV1MemberController.class))
+            .andExpect(handler().methodName("join"))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.resultCode").value("409-1"))
+            .andExpect(jsonPath("$.msg").value("해당 username은 이미 사용중입니다."));
+    }
+
+    @Test
+    @DisplayName("로그인")
+    void t3() throws Exception {
+        ResultActions resultActions = mvc
+            .perform(
+                post("/api/v1/members/login")
+                    .content("""
                                         {
                                             "username": "user1",
                                             "password": "1234"
                                         }
                                         """.stripIndent())
-                                .contentType(
-                                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
-                                )
-                )
-                .andDo(print());
+                    .contentType(
+                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
+                    )
+            )
+            .andDo(print());
 
         resultActions
-                .andExpect(handler().handlerType(ApiV1MemberController.class))
-                .andExpect(handler().methodName("login"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resultCode").value("200-1"))
-                .andExpect(jsonPath("$.msg").value("유저1님 환영합니다."))
-                .andExpect(jsonPath("$.data").exists())
-                .andExpect(jsonPath("$.data.item").exists())
-                .andExpect(jsonPath("$.data.item.id").isNumber())
-                .andExpect(jsonPath("$.data.item.createDate").isString())
-                .andExpect(jsonPath("$.data.item.modifyDate").isString())
-                .andExpect(jsonPath("$.data.item.nickname").value("유저1"))
-                .andExpect(jsonPath("$.data.apiKey").isString());
+            .andExpect(handler().handlerType(ApiV1MemberController.class))
+            .andExpect(handler().methodName("login"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.resultCode").value("200-1"))
+            .andExpect(jsonPath("$.msg").value("유저1님 환영합니다."))
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.data.item").exists())
+            .andExpect(jsonPath("$.data.item.id").isNumber())
+            .andExpect(jsonPath("$.data.item.createDate").isString())
+            .andExpect(jsonPath("$.data.item.modifyDate").isString())
+            .andExpect(jsonPath("$.data.item.nickname").value("유저1"))
+            .andExpect(jsonPath("$.data.apiKey").isString());
     }
 }
