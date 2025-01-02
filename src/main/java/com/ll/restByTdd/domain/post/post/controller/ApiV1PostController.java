@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 public class ApiV1PostController {
-
     private final PostService postService;
     private final Rq rq;
 
@@ -30,14 +29,11 @@ public class ApiV1PostController {
     record PostWriteReqBody(
         @NotBlank
         @Length(min = 2, max = 100)
-        @Length(min = 2)
         String title,
         @NotBlank
-        @Length(min = 2, max = 100000)
-        @Length(min = 2)
+        @Length(min = 2, max = 10000000)
         String content
     ) {
-
     }
 
     @PostMapping
@@ -55,6 +51,7 @@ public class ApiV1PostController {
         );
     }
 
+
     record PostModifyReqBody(
         @NotBlank
         @Length(min = 2, max = 100)
@@ -63,7 +60,6 @@ public class ApiV1PostController {
         @Length(min = 2, max = 10000000)
         String content
     ) {
-
     }
 
     @PutMapping("/{id}")
@@ -73,9 +69,15 @@ public class ApiV1PostController {
         @RequestBody @Valid PostModifyReqBody reqBody
     ) {
         Member actor = rq.checkAuthentication();
+
         Post post = postService.findById(id).get();
+
         post.checkActorCanModify(actor);
+
         postService.modify(post, reqBody.title, reqBody.content);
+
+        postService.flush();
+
         return new RsData<>(
             "200-1",
             "%d번 글이 수정되었습니다.".formatted(id),
