@@ -27,9 +27,11 @@ public class ApiV1PostController {
 
     record PostWriteReqBody(
         @NotBlank
+        @Length(min = 2, max = 100)
         @Length(min = 2)
         String title,
         @NotBlank
+        @Length(min = 2, max = 100000)
         @Length(min = 2)
         String content
     ) {

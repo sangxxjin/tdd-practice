@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class ApiV1PostControllerTest {
+
     @Autowired
     private PostService postService;
     @Autowired
@@ -53,8 +54,10 @@ public class ApiV1PostControllerTest {
             .andExpect(handler().methodName("item"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(post.getId()))
-            .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-            .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.createDate").value(
+                Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.modifyDate").value(
+                Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
             .andExpect(jsonPath("$.authorId").value(post.getAuthor().getId()))
             .andExpect(jsonPath("$.authorName").value(post.getAuthor().getName()))
             .andExpect(jsonPath("$.title").value(post.getTitle()))
@@ -88,11 +91,11 @@ public class ApiV1PostControllerTest {
                 post("/api/v1/posts")
                     .header("Authorization", "Bearer " + actor.getApiKey())
                     .content("""
-                                        {
-                                            "title": "제목 new",
-                                            "content": "내용 new"
-                                        }
-                                        """)
+                        {
+                            "title": "제목 new",
+                            "content": "내용 new"
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -109,12 +112,46 @@ public class ApiV1PostControllerTest {
             .andExpect(jsonPath("$.resultCode").value("201-1"))
             .andExpect(jsonPath("$.msg").value("%d번 글이 작성되었습니다.".formatted(post.getId())))
             .andExpect(jsonPath("$.data.id").value(post.getId()))
-            .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-            .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.data.createDate").value(
+                Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.data.modifyDate").value(
+                Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
             .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
             .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
             .andExpect(jsonPath("$.data.title").value(post.getTitle()))
             .andExpect(jsonPath("$.data.content").value(post.getContent()));
+    }
+
+    @Test
+    @DisplayName("글 작성, with no input")
+    void t4() throws Exception {
+        Member actor = memberService.findByUsername("user1").get();
+        ResultActions resultActions = mvc
+            .perform(
+                post("/api/v1/posts")
+                    .header("Authorization", "Bearer " + actor.getApiKey())
+                    .content("""
+                        {
+                            "title": "",
+                            "content": ""
+                        }
+                        """)
+                    .contentType(
+                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
+                    )
+            )
+            .andDo(print());
+        resultActions
+            .andExpect(handler().handlerType(ApiV1PostController.class))
+            .andExpect(handler().methodName("write"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.resultCode").value("400-1"))
+            .andExpect(jsonPath("$.msg").value("""
+                content-Length-length must be between 2 and 10000000
+                content-NotBlank-may not be empty
+                title-Length-length must be between 2 and 100
+                title-NotBlank-may not be empty
+                """.stripIndent().trim()));
     }
 
 }
