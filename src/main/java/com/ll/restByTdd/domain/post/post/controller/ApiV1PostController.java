@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 public class ApiV1PostController {
+
     private final PostService postService;
     private final Rq rq;
 
@@ -35,6 +36,7 @@ public class ApiV1PostController {
         @Length(min = 2)
         String content
     ) {
+
     }
 
     @PostMapping
@@ -50,5 +52,24 @@ public class ApiV1PostController {
             "%d번 글이 작성되었습니다.".formatted(post.getId()),
             new PostDto(post)
         );
+    }
+
+    record PostModifyReqBody(
+        @NotBlank
+        @Length(min = 2, max = 100)
+        String title,
+        @NotBlank
+        @Length(min = 2, max = 10000000)
+        String content
+    ) {
+
+    }
+
+    @PutMapping("/{id}")
+    public RsData<PostDto> modify(
+        @PathVariable long id,
+        @RequestBody @Valid PostModifyReqBody reqBody
+    ) {
+        return null;
     }
 }

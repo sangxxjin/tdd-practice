@@ -5,6 +5,7 @@ import com.ll.restByTdd.domain.member.member.service.MemberService;
 import com.ll.restByTdd.domain.post.post.controller.ApiV1PostController;
 import com.ll.restByTdd.domain.post.post.entity.Post;
 import com.ll.restByTdd.domain.post.post.service.PostService;
+import java.time.LocalDateTime;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -177,6 +179,44 @@ public class ApiV1PostControllerTest {
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.resultCode").value("401-1"))
             .andExpect(jsonPath("$.msg").value("apiKey를 입력해주세요."));
+    }
+
+    @Test
+    @DisplayName("글 수정")
+    void t6() throws Exception {
+        Member actor = memberService.findByUsername("user1").get();
+        Post post = postService.findById(1).get();
+        LocalDateTime oldModifyDate = post.getModifyDate();
+        ResultActions resultActions = mvc
+            .perform(
+                put("/api/v1/posts/1")
+                    .header("Authorization", "Bearer " + actor.getApiKey())
+                    .content("""
+                        {
+                            "title": "축구 하실 분 계신가요?",
+                            "content": "14시 까지 22명을 모아야 진행이 됩니다."
+                        }
+                        """)
+                    .contentType(
+                        new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
+                    )
+            )
+            .andDo(print());
+        resultActions
+            .andExpect(handler().handlerType(ApiV1PostController.class))
+            .andExpect(handler().methodName("modify"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.resultCode").value("200-1"))
+            .andExpect(jsonPath("$.msg").value("1번 글이 수정되었습니다."))
+            .andExpect(jsonPath("$.data.id").value(1))
+            .andExpect(jsonPath("$.data.createDate").value(
+                Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.data.modifyDate").value(
+                Matchers.not(Matchers.startsWith(oldModifyDate.toString().substring(0, 25)))))
+            .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
+            .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
+            .andExpect(jsonPath("$.data.title").value("축구 하실 분 계신가요?"))
+            .andExpect(jsonPath("$.data.content").value("14시 까지 22명을 모아야 진행이 됩니다."));
     }
 
 
