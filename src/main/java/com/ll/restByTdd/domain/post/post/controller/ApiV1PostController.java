@@ -23,10 +23,13 @@ public class ApiV1PostController {
     @GetMapping("/{id}")
     public PostDto item(@PathVariable long id) {
         Post post = postService.findById(id).get();
+
         if (!post.isPublished()) {
             Member actor = rq.checkAuthentication();
+
             post.checkActorCanRead(actor);
         }
+
         return new PostDto(post);
     }
 
@@ -37,7 +40,9 @@ public class ApiV1PostController {
         String title,
         @NotBlank
         @Length(min = 2, max = 10000000)
-        String content
+        String content,
+        boolean published,
+        boolean listed
     ) {
     }
 
@@ -51,8 +56,8 @@ public class ApiV1PostController {
             actor,
             reqBody.title,
             reqBody.content,
-            true,
-            true
+            reqBody.published,
+            reqBody.listed
         );
 
         return new RsData<>(
@@ -69,7 +74,9 @@ public class ApiV1PostController {
         String title,
         @NotBlank
         @Length(min = 2, max = 10000000)
-        String content
+        String content,
+        boolean published,
+        boolean listed
     ) {
     }
 
@@ -85,7 +92,7 @@ public class ApiV1PostController {
 
         post.checkActorCanModify(actor);
 
-        postService.modify(post, reqBody.title, reqBody.content);
+        postService.modify(post, reqBody.title, reqBody.content, reqBody.published, reqBody.listed);
 
         postService.flush();
 
@@ -95,14 +102,20 @@ public class ApiV1PostController {
             new PostDto(post)
         );
     }
+
+
     @DeleteMapping("/{id}")
     public RsData<Void> delete(
         @PathVariable long id
     ) {
         Member member = rq.checkAuthentication();
+
         Post post = postService.findById(id).get();
+
         post.checkActorCanDelete(member);
+
         postService.delete(post);
+
         return new RsData<>("200-1", "%d번 글이 삭제되었습니다.".formatted(id));
     }
 }
