@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class ApiV1PostControllerTest {
+
     @Autowired
     private PostService postService;
     @Autowired
@@ -55,8 +56,10 @@ public class ApiV1PostControllerTest {
             .andExpect(handler().methodName("item"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(post.getId()))
-            .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-            .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.createDate").value(
+                Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.modifyDate").value(
+                Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
             .andExpect(jsonPath("$.authorId").value(post.getAuthor().getId()))
             .andExpect(jsonPath("$.authorName").value(post.getAuthor().getName()))
             .andExpect(jsonPath("$.title").value(post.getTitle()))
@@ -92,13 +95,13 @@ public class ApiV1PostControllerTest {
                 post("/api/v1/posts")
                     .header("Authorization", "Bearer " + actor.getApiKey())
                     .content("""
-                                        {
-                                            "title": "제목 new",
-                                            "content": "내용 new",
-                                            "published": true,
-                                            "listed": false
-                                        }
-                                        """)
+                        {
+                            "title": "제목 new",
+                            "content": "내용 new",
+                            "published": true,
+                            "listed": false
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -116,8 +119,10 @@ public class ApiV1PostControllerTest {
             .andExpect(jsonPath("$.resultCode").value("201-1"))
             .andExpect(jsonPath("$.msg").value("%d번 글이 작성되었습니다.".formatted(post.getId())))
             .andExpect(jsonPath("$.data.id").value(post.getId()))
-            .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-            .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.data.createDate").value(
+                Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.data.modifyDate").value(
+                Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
             .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
             .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
             .andExpect(jsonPath("$.data.title").value(post.getTitle()))
@@ -136,11 +141,11 @@ public class ApiV1PostControllerTest {
                 post("/api/v1/posts")
                     .header("Authorization", "Bearer " + actor.getApiKey())
                     .content("""
-                                        {
-                                            "title": "",
-                                            "content": ""
-                                        }
-                                        """)
+                        {
+                            "title": "",
+                            "content": ""
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -153,11 +158,11 @@ public class ApiV1PostControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.resultCode").value("400-1"))
             .andExpect(jsonPath("$.msg").value("""
-                        content-Length-length must be between 2 and 10000000
-                        content-NotBlank-may not be empty
-                        title-Length-length must be between 2 and 100
-                        title-NotBlank-may not be empty
-                        """.stripIndent().trim()));
+                content-Length-length must be between 2 and 10000000
+                content-NotBlank-may not be empty
+                title-Length-length must be between 2 and 100
+                title-NotBlank-may not be empty
+                """.stripIndent().trim()));
     }
 
     @Test
@@ -167,11 +172,11 @@ public class ApiV1PostControllerTest {
             .perform(
                 post("/api/v1/posts")
                     .content("""
-                                        {
-                                            "title": "제목 new",
-                                            "content": "내용 new"
-                                        }
-                                        """)
+                        {
+                            "title": "제목 new",
+                            "content": "내용 new"
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -199,13 +204,13 @@ public class ApiV1PostControllerTest {
                 put("/api/v1/posts/1")
                     .header("Authorization", "Bearer " + actor.getApiKey())
                     .content("""
-                                        {
-                                            "title": "축구 하실 분 계신가요?",
-                                            "content": "14시 까지 22명을 모아야 진행이 됩니다.",
-                                            "published": true,
-                                            "listed": false
-                                        }
-                                        """)
+                        {
+                            "title": "축구 하실 분 계신가요?",
+                            "content": "14시 까지 22명을 모아야 진행이 됩니다.",
+                            "published": true,
+                            "listed": false
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -219,8 +224,10 @@ public class ApiV1PostControllerTest {
             .andExpect(jsonPath("$.resultCode").value("200-1"))
             .andExpect(jsonPath("$.msg").value("1번 글이 수정되었습니다."))
             .andExpect(jsonPath("$.data.id").value(1))
-            .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-            .andExpect(jsonPath("$.data.modifyDate").value(Matchers.not(Matchers.startsWith(oldModifyDate.toString().substring(0, 25)))))
+            .andExpect(jsonPath("$.data.createDate").value(
+                Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.data.modifyDate").value(
+                Matchers.not(Matchers.startsWith(oldModifyDate.toString().substring(0, 25)))))
             .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
             .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
             .andExpect(jsonPath("$.data.title").value("축구 하실 분 계신가요?"))
@@ -239,11 +246,11 @@ public class ApiV1PostControllerTest {
                 put("/api/v1/posts/1")
                     .header("Authorization", "Bearer " + actor.getApiKey())
                     .content("""
-                                        {
-                                            "title": "",
-                                            "content": ""
-                                        }
-                                        """)
+                        {
+                            "title": "",
+                            "content": ""
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -256,11 +263,11 @@ public class ApiV1PostControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.resultCode").value("400-1"))
             .andExpect(jsonPath("$.msg").value("""
-                        content-Length-length must be between 2 and 10000000
-                        content-NotBlank-may not be empty
-                        title-Length-length must be between 2 and 100
-                        title-NotBlank-may not be empty
-                        """.stripIndent().trim()));
+                content-Length-length must be between 2 and 10000000
+                content-NotBlank-may not be empty
+                title-Length-length must be between 2 and 100
+                title-NotBlank-may not be empty
+                """.stripIndent().trim()));
     }
 
     @Test
@@ -270,11 +277,11 @@ public class ApiV1PostControllerTest {
             .perform(
                 put("/api/v1/posts/1")
                     .content("""
-                                        {
-                                            "title": "축구 하실 분 계신가요?",
-                                            "content": "14시 까지 22명을 모아야 진행이 됩니다."
-                                        }
-                                        """)
+                        {
+                            "title": "축구 하실 분 계신가요?",
+                            "content": "14시 까지 22명을 모아야 진행이 됩니다."
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -299,11 +306,11 @@ public class ApiV1PostControllerTest {
                 put("/api/v1/posts/1")
                     .header("Authorization", "Bearer " + actor.getApiKey())
                     .content("""
-                                        {
-                                            "title": "축구 하실 분 계신가요?",
-                                            "content": "14시 까지 22명을 모아야 진행이 됩니다."
-                                        }
-                                        """)
+                        {
+                            "title": "축구 하실 분 계신가요?",
+                            "content": "14시 까지 22명을 모아야 진행이 됩니다."
+                        }
+                        """)
                     .contentType(
                         new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)
                     )
@@ -416,8 +423,10 @@ public class ApiV1PostControllerTest {
             .andExpect(handler().methodName("item"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(post.getId()))
-            .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-            .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.createDate").value(
+                Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+            .andExpect(jsonPath("$.modifyDate").value(
+                Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
             .andExpect(jsonPath("$.authorId").value(post.getAuthor().getId()))
             .andExpect(jsonPath("$.authorName").value(post.getAuthor().getName()))
             .andExpect(jsonPath("$.title").value(post.getTitle()))
@@ -488,16 +497,21 @@ public class ApiV1PostControllerTest {
             Post post = posts.get(i);
             resultActions
                 .andExpect(jsonPath("$.items[%d].id".formatted(i)).value(post.getId()))
-                .andExpect(jsonPath("$.items[%d].createDate".formatted(i)).value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-                .andExpect(jsonPath("$.items[%d].modifyDate".formatted(i)).value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
-                .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
-                .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
+                .andExpect(jsonPath("$.items[%d].createDate".formatted(i)).value(
+                    Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+                .andExpect(jsonPath("$.items[%d].modifyDate".formatted(i)).value(
+                    Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+                .andExpect(
+                    jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
+                .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(
+                    post.getAuthor().getName()))
                 .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                 .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                 .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
                 .andExpect(jsonPath("$.items[%d].listed".formatted(i)).value(post.isListed()));
         }
     }
+
     @Test
     @DisplayName("다건 조회 with searchKeyword=축구")
     void t18() throws Exception {
@@ -521,10 +535,52 @@ public class ApiV1PostControllerTest {
             Post post = posts.get(i);
             resultActions
                 .andExpect(jsonPath("$.items[%d].id".formatted(i)).value(post.getId()))
-                .andExpect(jsonPath("$.items[%d].createDate".formatted(i)).value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-                .andExpect(jsonPath("$.items[%d].modifyDate".formatted(i)).value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
-                .andExpect(jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
-                .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(post.getAuthor().getName()))
+                .andExpect(jsonPath("$.items[%d].createDate".formatted(i)).value(
+                    Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+                .andExpect(jsonPath("$.items[%d].modifyDate".formatted(i)).value(
+                    Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+                .andExpect(
+                    jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
+                .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(
+                    post.getAuthor().getName()))
+                .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
+                .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
+                .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
+                .andExpect(jsonPath("$.items[%d].listed".formatted(i)).value(post.isListed()));
+        }
+    }
+
+    @Test
+    @DisplayName("다건 조회 with searchKeywordType=content&searchKeyword=18명")
+    void t19() throws Exception {
+        ResultActions resultActions = mvc
+            .perform(
+                get("/api/v1/posts?page=1&pageSize=3&searchKeywordType=content&searchKeyword=18명")
+            )
+            .andDo(print());
+        Page<Post> postPage = postService
+            .findByListedPaged(true, "content", "18명", 1, 3);
+        resultActions
+            .andExpect(handler().handlerType(ApiV1PostController.class))
+            .andExpect(handler().methodName("items"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalItems").value(postPage.getTotalElements()))
+            .andExpect(jsonPath("$.totalPages").value(postPage.getTotalPages()))
+            .andExpect(jsonPath("$.currentPageNumber").value(1))
+            .andExpect(jsonPath("$.pageSize").value(3));
+        List<Post> posts = postPage.getContent();
+        for (int i = 0; i < posts.size(); i++) {
+            Post post = posts.get(i);
+            resultActions
+                .andExpect(jsonPath("$.items[%d].id".formatted(i)).value(post.getId()))
+                .andExpect(jsonPath("$.items[%d].createDate".formatted(i)).value(
+                    Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+                .andExpect(jsonPath("$.items[%d].modifyDate".formatted(i)).value(
+                    Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+                .andExpect(
+                    jsonPath("$.items[%d].authorId".formatted(i)).value(post.getAuthor().getId()))
+                .andExpect(jsonPath("$.items[%d].authorName".formatted(i)).value(
+                    post.getAuthor().getName()))
                 .andExpect(jsonPath("$.items[%d].title".formatted(i)).value(post.getTitle()))
                 .andExpect(jsonPath("$.items[%d].content".formatted(i)).doesNotExist())
                 .andExpect(jsonPath("$.items[%d].published".formatted(i)).value(post.isPublished()))
