@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 public class ApiV1PostController {
+
     private final PostService postService;
     private final Rq rq;
 
@@ -38,10 +39,14 @@ public class ApiV1PostController {
             .stream()
             .map(PostDto::new)
             .toList();
+        long totalPages = postPage.getTotalPages();
 
         return Map.of(
             "totalItems", totalItems,
-            "items", items
+            "items", items,
+            "totalPages", totalPages,
+            "currentPageNumber", page,
+            "pageSize", pageSize
         );
     }
 
@@ -69,6 +74,7 @@ public class ApiV1PostController {
         boolean published,
         boolean listed
     ) {
+
     }
 
     @PostMapping
@@ -103,6 +109,7 @@ public class ApiV1PostController {
         boolean published,
         boolean listed
     ) {
+
     }
 
     @PutMapping("/{id}")
