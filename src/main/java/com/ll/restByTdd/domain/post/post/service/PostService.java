@@ -12,18 +12,20 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+
     private final PostRepository postRepository;
 
     public long count() {
         return postRepository.count();
     }
 
-    public Post write(Member author, String title, String content) {
+    public Post write(Member author, String title, String content, boolean published) {
         Post post = Post.builder()
-                .author(author)
-                .title(title)
-                .content(content)
-                .build();
+            .author(author)
+            .title(title)
+            .content(content)
+            .published(published)
+            .build();
 
         return postRepository.save(post);
     }
@@ -48,6 +50,7 @@ public class PostService {
     public void flush() {
         postRepository.flush(); // em.flush(); 와 동일
     }
+
     public Optional<Post> findLatest() {
         return postRepository.findFirstByOrderByIdDesc();
     }
