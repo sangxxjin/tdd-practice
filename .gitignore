@@ -1,9 +1,14 @@
+<<<<<<< HEAD
+=======
+HELP.md
+>>>>>>> other-project/main
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+<<<<<<< HEAD
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
@@ -17,6 +22,9 @@ out/
 !**/src/test/**/out/
 
 ### Eclipse ###
+=======
+### STS ###
+>>>>>>> other-project/main
 .apt_generated
 .classpath
 .factorypath
@@ -28,6 +36,18 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+<<<<<<< HEAD
+=======
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+>>>>>>> other-project/main
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -38,5 +58,11 @@ bin/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 ### Mac OS ###
 .DS_Store
+=======
+### Custom ###
+db_dev.mv.db
+db_dev.trace.db
+>>>>>>> other-project/main
